@@ -42,4 +42,8 @@ LogToFile( filename, line, flags := 0 );
 OpenBinaryFile( filename, mode := OPENMODE_IN, endian := LITTLE_ENDIAN );
 
 CreateDirectory( dirname );
+
 ListDirectory( dirname, extension := LISTDIR_ALL_FILES, listdirs := LISTDIR_DONT_LIST_DIRS );
+
+OpenXMLFile( filename );
+CreateXMLFile( );
