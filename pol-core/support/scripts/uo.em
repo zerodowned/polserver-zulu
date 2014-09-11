@@ -274,6 +274,8 @@ FindSubstance( container, objtype, amount, makeinuse := 0, flags := 0 );
 GetAmount( item );
 GetCommandHelp( character, command );
 GetCoordsInLine(x1, y1, x2, y2);
+GetMidpointCircleCoords(x0, y0, radius);
+GetSubTileCoord(x, y, z);
 GetEquipmentByLayer( character, layer );
 GetFacing(from_x, from_y, to_x, to_y);
 GetGlobalProperty( propname );
@@ -310,6 +312,7 @@ ListMobilesNearLocation( x, y, z, range, realm := _DEFAULT_REALM );
 ListMobilesNearLocationEx( x,y,z, range, flags, realm := _DEFAULT_REALM );
 ListMultisInBox( x1,y1,z1, x2,y2,z2, realm := _DEFAULT_REALM );
 ListObjectsInBox( x1,y1,z1, x2,y2,z2, realm := _DEFAULT_REALM );
+ListMobilesInBox( x1,y1,z1, x2,y2,z2, realm := _DEFAULT_REALM );
 ListStaticsAtLocation( x, y, z, flags := 0, realm := _DEFAULT_REALM );
 ListStaticsInBox( x1,y1,z1, x2,y2,z2, flags := 0, realm := _DEFAULT_REALM );
 ListStaticsNearLocation( x, y, z, range, flags := 0, realm := _DEFAULT_REALM );
@@ -378,3 +381,4 @@ TargetMultiPlacement( character, objtype, flags := 0, xoffset := 0, yoffset := 0
 UpdateMobile( mobile, recreate := UPDATEMOBILE_UPDATE );
 UseItem(item, character);
 POLCore();
+

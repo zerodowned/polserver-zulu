@@ -2,6 +2,7 @@ const TRIM_LEFT  := 0x1; // Trim whitespace from Left of string.
 const TRIM_RIGHT := 0x2; // Trim whitespace from Right of string.
 const TRIM_BOTH  := 0x3; // Trim whitespace from Left and Right of string.
 
+
 // TypeOfInt() constants
 const OT_UNKNOWN          :=  0;
 const OT_UNINIT           :=  1;
@@ -38,6 +39,10 @@ const OT_ITEMREF          := 31;
 const OT_BOATREF          := 32;
 const OT_MULTIREF         := 33;
 const OT_CLIENTREF        := 34;
+	// Only applicable if SQL is active and compiled.
+const OT_SQLCONN          := 35;
+const OT_SQLRESULT        := 36;
+const OT_SQLROW           := 37; 
 
 	// returns the one-based index of Search within Str after position Start
 Find( Str, Search, Start );
@@ -59,8 +64,8 @@ CDbl( expr );           // Convert to double
 CStr( expr );           // Convert to string
 CAsc( str );            // Convert first character to Ascii value (0-255)
 CChr( number );         // Convert Ascii value to character (type: string)
-CAscZ( str );           // Convert string to array of Ascii values (0-255)
-CRusUcZ( str );		// Convert string to UC array of values
+CAscZ( str, nullterm := 0 );    // Convert string to array of UC values
+//CRusUcZ( str );		// Convert string to UC array of values
 CChrZ( intarray );      // Convert array of Ascii values to a string
 
 Bin( number) ;			// Convert 25 to 11001
@@ -95,3 +100,6 @@ Unpack( str );
 TypeOf( expr ); // returns "Integer", "Real" etc
 SizeOf( expr ); // returns estimate of memory used
 TypeOfInt( expr );
+// CacheVal( cache_key, cache_val );
+// IsCached( cache_key, cache_val );
+// CacheGetKeys( );
