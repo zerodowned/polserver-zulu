@@ -731,10 +731,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\lib\sqlite\sqlite3.c"
-				>
-			</File>
-			<File
 				RelativePath=".\sqlscrobj.cpp"
 				>
 			</File>
