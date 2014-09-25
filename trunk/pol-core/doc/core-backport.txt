@@ -1,3 +1,5 @@
+optimized string.format() to work about 20% faster
+
 string .length
        .startswith
        .startswith_ic
