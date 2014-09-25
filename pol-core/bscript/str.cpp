@@ -248,9 +248,9 @@ bool s_parse_int(int &i, string const &s)
 }
 
 // remove leading/trailing spaces
-void s_trim(string &s)
+void s_trim(string &s, std::stringstream& trimmer)
 {
-	std::stringstream trimmer;
+	//std::stringstream trimmer;
 	trimmer << s;
 	s.clear();
 	trimmer >> s;
@@ -607,6 +607,8 @@ BObjectImp* String::call_method_id( const int id, Executor& ex, bool forcebuilti
 				unsigned int tag_stop_pos;  // the position of tag's end "}"
 				unsigned int tag_dot_pos;
 
+				std::stringstream trimmer;
+
 				int tag_param_idx;			
 
 				unsigned int str_pos=0; // current string position					
@@ -619,7 +621,7 @@ BObjectImp* String::call_method_id( const int id, Executor& ex, bool forcebuilti
 						str_pos = tag_stop_pos + 1;
 						
 						string tag_body = value_.substr(tag_start_pos+1, (tag_stop_pos - tag_start_pos)-1);					
-						s_trim( tag_body ); // trim the tag of whitespaces
+						s_trim( tag_body, trimmer ); // trim the tag of whitespaces
 
 						string frmt;
 						size_t formatter_pos = tag_body.find(':');
