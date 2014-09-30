@@ -248,13 +248,14 @@ bool s_parse_int(int &i, string const &s)
 }
 
 // remove leading/trailing spaces
-void s_trim(string &s, std::stringstream& trimmer)
+void s_trim(string &s)
 {
-	//std::stringstream trimmer;
+	std::stringstream trimmer;
 	trimmer << s;
 	s.clear();
 	trimmer >> s;
 }
+
 
 void int_to_binstr(int& value, std::stringstream &s)
 {
@@ -605,14 +606,14 @@ BObjectImp* String::call_method_id( const int id, Executor& ex, bool forcebuilti
 
 				unsigned int tag_start_pos; // the position of tag's start "{"
 				unsigned int tag_stop_pos;  // the position of tag's end "}"
-				unsigned int tag_dot_pos;
-
-				std::stringstream trimmer;
+				unsigned int tag_dot_pos;				
 
 				int tag_param_idx;			
 
 				unsigned int str_pos=0; // current string position					
-				unsigned int next_param_idx = 0; // next index of .format() parameter			
+				unsigned int next_param_idx = 0; // next index of .format() parameter		
+
+				char w_spaces[] = "\t ";
 
 				while((tag_start_pos = value_.find("{", str_pos)) != string::npos) {
 					if((tag_stop_pos=value_.find("}", tag_start_pos)) != string::npos) {
@@ -620,8 +621,24 @@ BObjectImp* String::call_method_id( const int id, Executor& ex, bool forcebuilti
 						result << value_.substr(str_pos, tag_start_pos - str_pos);
 						str_pos = tag_stop_pos + 1;
 						
-						string tag_body = value_.substr(tag_start_pos+1, (tag_stop_pos - tag_start_pos)-1);					
-						s_trim( tag_body, trimmer ); // trim the tag of whitespaces
+						string tag_body = value_.substr(tag_start_pos+1, (tag_stop_pos - tag_start_pos)-1);
+
+						tag_start_pos = tag_body.find_first_not_of( w_spaces );
+						tag_stop_pos = tag_body.find_last_not_of( w_spaces );
+
+						//cout << "' tag_body1: '" << tag_body << "'";
+						
+						// trim the tag of whitespaces (slightly faster code ~25%)
+						if(tag_start_pos!=string::npos && tag_stop_pos!=string::npos)
+							tag_body = tag_body.substr(tag_start_pos, (tag_stop_pos-tag_start_pos)+1);
+						else if(tag_start_pos!=string::npos)
+							tag_body = tag_body.substr(tag_start_pos);
+						else if(tag_stop_pos!=string::npos)
+							tag_body = tag_body.substr(0, tag_stop_pos+1);								
+						
+						// s_trim( tag_body ); // trim the tag of whitespaces
+
+						//cout << "' tag_body2: '" << tag_body << "'";
 
 						string frmt;
 						size_t formatter_pos = tag_body.find(':');
@@ -662,7 +679,7 @@ BObjectImp* String::call_method_id( const int id, Executor& ex, bool forcebuilti
 						//cout << "prop_name: '" << prop_name << "' tag_body: '" << tag_body << "'";
 
 						if( ex.numParams() <= tag_param_idx ) {						
-							result << "<idx out of range: #" << (tag_param_idx + 1) << ">";						
+							result << "<tag out of range: #" << (tag_param_idx + 1) << ">";						
 							continue;
 						}					
 

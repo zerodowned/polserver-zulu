@@ -224,7 +224,7 @@ Operator binary_operators[] =
 
     { "<>",	TOK_NEQ,        PREC_EQUALTO,  TYP_OPERATOR },
     { "!=",	TOK_NEQ,        PREC_EQUALTO,  TYP_OPERATOR },
-    { "=",	TOK_EQUAL1,     PREC_EQUALTO,  TYP_OPERATOR, true, false }, // deprecated: :=/==
+    { "=",	TOK_ASSIGN,     PREC_ASSIGN,  TYP_OPERATOR, true, false }, // deprecated: :=/==
     { "==",	TOK_EQUAL,      PREC_EQUALTO,  TYP_OPERATOR },
 
 //    { "and",	TOK_AND,    PREC_LOGAND,  TYP_OPERATOR },
