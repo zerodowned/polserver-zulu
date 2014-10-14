@@ -87,13 +87,13 @@ protected:
     BObjectImp* mf_SetWarMode();
     BObjectImp* mf_SetAnchor();
 
-    BObjectImp* move_self( UFACING facing, bool run, bool adjust_ok = false );
+    BObjectImp* move_self( UFACING facing, bool run, bool adjust_ok = false, bool is_wandering = false );
 	// class machinery 
 	virtual BObjectImp* execFunc( unsigned idx );
 	virtual int functionIndex( const char* func );
 	static NPCFunctionDef function_table[];
 
-	inline bool _internal_move(UFACING facing, int run); //DAVE
+	inline bool _internal_move(UFACING facing, int run, bool is_wandering = false); //DAVE
 };
 
 #endif

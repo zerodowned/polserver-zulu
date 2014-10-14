@@ -649,7 +649,9 @@ ObjMethod object_methods[] = {
 	{ MTH_STARTSWITH_IC, "startswith_ic" },
 	{ MTH_BASE64_ENCODE, "base64_encode" },
 	{ MTH_BASE64_DECODE, "base64_decode" },	
-	{ MTH_OBFUSCATE, "obfuscate" }	
+	{ MTH_OBFUSCATE, "obfuscate" },
+	{ MTH_CAPITALIZE, "capitalize" },
+	{ MTH_PROCESS_GENDER_TAGS, "process_gender_tags" }
 };
 
 int n_objmethods = sizeof object_methods / sizeof object_methods[0];

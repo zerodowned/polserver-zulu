@@ -79,9 +79,9 @@ public:
     void restart_script();
     void start_script();
 
-    bool could_move( UFACING dir ) const;
+    bool could_move( UFACING dir, bool is_wandering = false ) const;
     bool anchor_allows_move( UFACING dir ) const;
-    bool npc_path_blocked( UFACING dir ) const;
+    bool npc_path_blocked( UFACING dir, bool is_wandering = false ) const;
     
     virtual BObjectImp* get_script_member( const char *membername ) const;
     virtual BObjectImp* get_script_member_id( const int id ) const; ///id test

@@ -1,3 +1,7 @@
+string 
+      .capitalize()
+      .process_gender_tags( <gender: int> )
+
 optimized string.format() to work about 20% faster
 
 string .length

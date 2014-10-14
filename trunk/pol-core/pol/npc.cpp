@@ -185,7 +185,7 @@ bool NPC::anchor_allows_move( UFACING dir ) const
     return true;
 }
 
-bool NPC::could_move( UFACING dir ) const
+bool NPC::could_move( UFACING dir, bool is_wandering ) const
 {    
     short newz;
     UMulti* supporting_multi;
@@ -212,13 +212,13 @@ bool NPC::could_move( UFACING dir ) const
 	unsigned short newy = y + move_delta[ dir ].ymove;
     
     return realm->walkheight( this, newx, newy, z, &newz, &supporting_multi, &walkon_item ) &&
-           !npc_path_blocked( dir ) &&
+           !npc_path_blocked( dir, is_wandering ) &&
            anchor_allows_move( dir );
 }
 
-bool NPC::npc_path_blocked( UFACING dir ) const
+bool NPC::npc_path_blocked( UFACING dir, bool is_wandering ) const
 {
-	if (cached_settings.freemove || ( !this->master() && !ssopt.mobiles_block_npc_movement ) )
+	if (cached_settings.freemove || (!this->master() && !ssopt.mobiles_block_npc_movement && !is_wandering) )
 		return false;
 
     unsigned short newx = x + move_delta[ dir ].xmove;
@@ -239,7 +239,7 @@ bool NPC::npc_path_blocked( UFACING dir ) const
 		{
 			
 			// Check first with the ssopt false to now allow npcs of same master running on top of each other
-			if ( !ssopt.mobiles_block_npc_movement )
+			if ( !ssopt.mobiles_block_npc_movement && !is_wandering )
 			{
 				NPC* npc = static_cast<NPC*>(chr);
 				if ( ( chr->acct == NULL && this->master() == npc->master() ) && !chr->dead() && is_visible_to_me(chr) )
