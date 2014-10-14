@@ -583,6 +583,86 @@ BObjectImp* String::call_method_id( const int id, Executor& ex, bool forcebuilti
 				return new BError( "string.equals_ic(String) requires a String parameter." );					
 			}
 		}
+		case MTH_CAPITALIZE:
+		{
+			char w_spaces[] = "\t \r\n";
+
+			std::string result(value_);
+
+			unsigned int word_start_pos;
+			unsigned int word_stop_pos;
+			unsigned int str_pos = 0; // current string position
+
+			while((word_start_pos = value_.find_first_not_of(w_spaces, str_pos)) !=string::npos) {
+				result[word_start_pos] = std::toupper(result[word_start_pos], pol_locale);
+				str_pos = value_.find_first_of( w_spaces, word_start_pos + 1 );
+				if( str_pos == string::npos )
+					break;
+			}
+
+			return new String( result );
+
+			//while((tag_start_pos = value_.find("{", str_pos)) != string::npos) {
+			//		if((tag_stop_pos=value_.find("}", tag_start_pos)) != string::npos) {
+		}
+		case MTH_PROCESS_GENDER_TAGS:
+		{
+			if ( ex.numParams() > 2 )
+				return new BError( "string.process_gender_tags(gender: int) takes only two parameters" );
+			if ( ex.numParams() < 1 )
+				return new BError( "string.process_gender_tags(gender: int) takes at least one parameter" );
+
+			const char GENDER_STR_TAG[] = "$g:";
+
+			int gender = ex.paramAsLong(0);
+
+			if( gender < 0 )
+				gender = 0;
+			else if( gender > 1 )
+				gender = 1;
+
+			size_t str_len = value_.length();
+
+			if(!str_len)
+				return new String(value_);
+
+			size_t gtag_len = strlen( GENDER_STR_TAG );        
+			size_t gtag_pos, gtag_end_pos;
+			size_t str_pos = 0; // current string position	
+
+			std::stringstream result;
+    
+			while( (gtag_pos = value_.find(GENDER_STR_TAG, str_pos)) != string::npos &&
+				(gtag_end_pos = value_.find(";", gtag_pos + gtag_len ))!= string::npos ) {
+
+				result << value_.substr(str_pos, gtag_pos - str_pos);
+				str_pos = gtag_end_pos + 1;
+
+				//std::string gtag_text = value_.substr(gtag_pos, gtag_end_pos-gtag_pos+1);
+				std::string payload = value_.substr(gtag_pos+gtag_len, gtag_end_pos-(gtag_pos + gtag_len));
+				
+				//cout << "payload: " << payload << ", gtag_pos: " << gtag_pos << ", gtag_end_pos: " << gtag_end_pos << std::endl;
+
+				size_t sep_pos = payload.find(":");
+				if( sep_pos == string::npos )
+					result << payload;
+				else {
+					if(gender==0)
+						result << payload.substr(0, sep_pos);
+					else
+						result << payload.substr(sep_pos+1, string::npos);					
+				}
+			}
+
+			if( str_pos < value_.length() ) {
+				result << value_.substr( str_pos, string::npos ); 
+			}	
+    
+			return new String( result.str() );
+
+			//while((tag_start_pos = value_.find("{", str_pos)) != string::npos) {
+			//		if((tag_stop_pos=value_.find("}", tag_start_pos)) != string::npos) {
+		}
 		case MTH_FIND:
 		{
 			if ( ex.numParams() > 2 )

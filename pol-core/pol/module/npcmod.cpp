@@ -258,14 +258,14 @@ BObjectImp* NPCExecutorModule::mf_SetAnchor()
 
 
 
-bool NPCExecutorModule::_internal_move(UFACING facing, int run)
+bool NPCExecutorModule::_internal_move(UFACING facing, int run, bool is_wandering)
 {
 	bool success = false;
 	int dir = facing;
 	if (run) 
 		dir |= 0x80; // FIXME HARDCODE
 
-	if (npc.could_move(facing))
+	if (npc.could_move(facing, is_wandering))
 	{
 		if (npc.move(static_cast<unsigned char>(dir))) // this could still fail, if paralyzed or frozen
 		{
@@ -280,7 +280,7 @@ bool NPCExecutorModule::_internal_move(UFACING facing, int run)
 	return success;
 }
 
-BObjectImp* NPCExecutorModule::move_self( UFACING facing, bool run, bool adjust_ok )
+BObjectImp* NPCExecutorModule::move_self( UFACING facing, bool run, bool adjust_ok, bool is_wandering )
 {
 	bool success = false;
 	int dir = facing;
@@ -296,14 +296,14 @@ BObjectImp* NPCExecutorModule::move_self( UFACING facing, bool run, bool adjust_
 			{
 				facing = static_cast<UFACING>((dir + adjustments[i]) & 7);
 
-				success = _internal_move(facing, run);
+				success = _internal_move(facing, run, is_wandering);
 				if(success == true)
 					break;
 			}
 		}
 		else
 		{
-			success = _internal_move(facing, run);
+			success = _internal_move(facing, run, is_wandering);
 		}
 	}
 	else
@@ -328,6 +328,7 @@ BObjectImp* NPCExecutorModule::mf_Wander()
 {
 	u8 newfacing = 0;
 	bool adjust_ok = true;
+
 	switch( random_int( 8 ) )
 	{
 	case 0: case 1: case 2: case 3: case 4: case 5:
@@ -342,7 +343,7 @@ BObjectImp* NPCExecutorModule::mf_Wander()
 		adjust_ok = false;
 		break;
 	}
-	return move_self( static_cast<UFACING>(newfacing), false, adjust_ok );
+	return move_self( static_cast<UFACING>(newfacing), false, adjust_ok, true );
 }
 
 BObjectImp* NPCExecutorModule::face()
