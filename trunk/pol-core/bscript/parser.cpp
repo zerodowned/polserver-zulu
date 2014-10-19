@@ -100,8 +100,8 @@ char operator_brk[] = "+-/*(),<=>,:;%";
 char ident_allowed[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "abcdefghijklmnopqrstuvwxyz"
-	"ÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÝÞ‗"
-	"אבגדהו¸זחטיךכלםמןנסעףפץצקרשüת‎‏ÿ"
+	"ÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÛÚÝÞ‗"
+	"אבגדהו¸זחטיךכלםמןנסעףפץצקרשüûת‎‏ÿ"
     "0123456789"
     "_"; // $%@& removed 9/17/1998 Syz
 
