@@ -638,20 +638,20 @@ ObjMethod object_methods[] = {
 	{ MTH_XMLTOSTRING, "xmltostring" },
 	{ MTH_APPENDXMLCOMMENT, "appendxmlcomment" },
 	{ MTH_CLONENODE, "clonenode" },
-	{ MTH_GETSTRINGZLIBBED, "getstringzlibbed" },
-	{ MTH_EQUALS_IC, "equals_ic" },
+	{ MTH_GETSTRINGZLIBBED, "getstringzlibbed" },	
 	{ MTH_FIND, "find" },	
 	{ MTH_FORMAT, "format" },
+	{ MTH_APPLY, "apply" }, // not implemeneted 
+	{ MTH_EQUALS_IC, "equals_ic" },
 	{ MTH_REJECT_IP, "reject_ip" },
-	{ MTH_APPLY, "apply" },
-	{ MTH_LENGTH, "length" },
 	{ MTH_STARTSWITH, "startswith" },
 	{ MTH_STARTSWITH_IC, "startswith_ic" },
-	{ MTH_BASE64_ENCODE, "base64_encode" },
-	{ MTH_BASE64_DECODE, "base64_decode" },	
 	{ MTH_OBFUSCATE, "obfuscate" },
+	{ MTH_BASE64_ENCODE, "base64_encode" },
+	{ MTH_BASE64_DECODE, "base64_decode" },
+	{ MTH_LENGTH, "length" },
 	{ MTH_CAPITALIZE, "capitalize" },
-	{ MTH_PROCESS_GENDER_TAGS, "process_gender_tags" }
+	{ MTH_PROCESS_GENDER_TAGS, "process_gender_tags" },
 };
 
 int n_objmethods = sizeof object_methods / sizeof object_methods[0];
