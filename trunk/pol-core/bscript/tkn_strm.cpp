@@ -97,7 +97,19 @@ void Token::printOn(ostream& os) const
         case INS_GET_MEMBER_ID:     os << "get member id '" << getObjMember(lval)->code << "' (" << lval << ")"; break;
         case INS_SET_MEMBER_ID:     os << "set member id '" << getObjMember(lval)->code << "' (" << lval << ")"; break;
         case INS_SET_MEMBER_ID_CONSUME: os << "set member id '" << getObjMember(lval)->code << "' (" << lval << ") #"; break;
-        case INS_CALL_METHOD_ID:    os << "Call Method id " << getObjMethod((long)lval)->code << " (#" << lval << ", " << type << " params)"; break;
+        case INS_CALL_METHOD_ID:    
+			os << "Call Method id ";
+			//cout << "getObjMethod(" << (long)lval << ")\n";
+			if( getObjMethod((long)lval) != NULL )
+				os << getObjMethod((long)lval)->code;
+			else
+				os << "NULL" << "(" << lval << ")";
+			os << " (#";
+			os << lval;
+			os	<< ", ";
+			os << type;
+			os << " params)";
+			break;
         case TOK_IN:                os << "in";             break;
         case INS_DICTIONARY_ADDMEMBER: os << "add dictionary member"; break;
 		
