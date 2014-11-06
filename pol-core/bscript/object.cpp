@@ -1457,7 +1457,7 @@ BObjectImp* ObjArray::call_method_id( const int id, Executor& ex, bool forcebuil
 				}	
 			}
 			else {
-				return new BError( "array.pop() doesn't take parameters." );
+				return new BError( "array.poprandom() doesn't take parameters." );
 			}
 		}
 		break;
@@ -1481,7 +1481,7 @@ BObjectImp* ObjArray::call_method_id( const int id, Executor& ex, bool forcebuil
 				}	
 			}
 			else {
-				return new BError( "array.poprandom() doesn't take parameters." );
+				return new BError( "array.pop() doesn't take parameters." );
 			}
 		}
 		break;
