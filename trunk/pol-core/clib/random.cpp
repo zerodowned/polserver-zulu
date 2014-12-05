@@ -81,6 +81,14 @@ let us know!  (gpc@ipld01.hac.com)
 #include <math.h>
 #include "random.h"
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
+#include <boost/random/uniform_real_distribution.hpp>
+
+static boost::random::mt19937 gen(std::time(0));
+
+//gen.seed(static_cast<unsigned int>(std::time(0)));
+
 int 	gaussian_noise_toggle;
 float 	gaussian_noise_uniform1, gaussian_noise_uniform2;
 float	gaussian_noise_temp;
@@ -155,9 +163,10 @@ float gaussian_noise(
 
   // static instance of the Random Number Generator
   // start seed time
-  static Ranfib ranGen((u64) time(NULL));
+  //static Ranfib ranGen((u64) time(NULL));
 
 
+  /*
   float random_float( float f )
   {
     float retval;
@@ -168,18 +177,42 @@ float gaussian_noise(
 
     return retval;
   }
+  */
 
+	float random_float( float f )
+	{
+		boost::random::uniform_real_distribution<> dist(0, f);
+		return dist(gen);
+	}
 
-  int random_int( int i )
-  {
-    int retval;
-    retval = (int)(ranGen.doub()*i);
-	  if (retval>=i)
-		  retval=i-1;
+	/*
+	int random_int( int i )
+	{
+		int retval;
+		retval = (int)(ranGen.doub()*i);
+		  if (retval>=i)
+			  retval=i-1;
 
-    return retval;
-  }
+		return retval;
+	}
+	*/
 
+  	int random_int( int i )
+	{
+		boost::random::uniform_int_distribution<> dist(0, i-1);
+		return dist(gen);
+	}
+
+	int random_int_range(int minI, int maxI)
+	{
+		if( minI >= maxI )
+			maxI = minI + 1;
+
+		boost::random::uniform_int_distribution<> dist(minI, maxI-1);
+		return dist(gen);		
+	}
+
+	/*
   int random_int_range(int minI, int maxI)
   {
 	  int diff = maxI-minI;
@@ -195,3 +228,4 @@ float gaussian_noise(
 
 	  return retval;
   }
+  */

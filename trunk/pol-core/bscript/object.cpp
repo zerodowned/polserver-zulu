@@ -27,6 +27,7 @@ Notes
 #include "objmembers.h"
 #include "objmethods.h"
 #include "execmodl.h"
+#include <boost/foreach.hpp>
 
 fixed_allocator<sizeof(BObject),256> bobject_alloc;
 fixed_allocator<sizeof(UninitObject),256> uninit_alloc;
@@ -1094,19 +1095,17 @@ BObjectImp* ObjArray::call_method_id( const int id, Executor& ex, bool forcebuil
 				return new BError( "array.sortby(membername) requires a parameter." );
 		}
 		break;
+
 	case MTH_REJECT:
 		if (name_arr.empty())
 		{
 			unsigned int ex_numParams = ex.numParams();
 			if (ex_numParams > 0)
-			{
-				ObjArray* ar = new ObjArray;
-
+			{				
 				const String* membername_str;
 				BObject* param1;
 
-				if((membername_str = ex.getStringParam( 0 ))==false)
-				{
+				if((membername_str = ex.getStringParam( 0 ))==false) {
 					return new BError( "Invalid parameter type" );
 				}				
 
@@ -1115,37 +1114,34 @@ BObjectImp* ObjArray::call_method_id( const int id, Executor& ex, bool forcebuil
 
 				std::string membername = membername_str->getStringRep();
 
-				for( Cont::const_iterator itr = ref_arr.begin(); itr != ref_arr.end(); ++itr )
-				{
-					if ( itr->get() )
-					{
-						BObject *bo = (itr->get());
+				ObjArray* objList = new ObjArray;
 
-						if ( bo == NULL )
-						{
-							cout << scripts_thread_script << " - '" << bo << " in array{}' check. Invalid data at index " << (itr-ref_arr.begin())+1 << endl;
-							continue;
-						} else {
+				BOOST_FOREACH(BObjectRef &itr, ref_arr) {
 
-							if(bo->isa(OTUninit)) {
-								ar->addElement(bo->impptr());
-								continue;		
-							}
+					BObject *bo = itr.get();
 
-							BObjectRef bo_member = bo->impptr()->get_member(membername.c_str());							
-							if( ex_numParams == 1 ) {
-								if(bo_member->isTrue())
-									continue;
-							} else { // has second parameter
-								if(bo_member->impptr()->isEqual( param1->impref() ))
-									continue;
-							}
-							ar->addElement(bo->impptr());
-						}
+					if(bo->isa(OTUninit)) {
+						objList->addElement(bo->impptr());
+						continue;		
 					}
+
+					BObjectRef bo_member = bo->impptr()->get_member(membername.c_str());							
+
+					if( ex_numParams == 1 ) {
+
+						if(bo_member->isTrue())
+							continue;
+						} else { // has second parameter
+							if(bo_member->impptr()->isEqual( param1->impref() ))
+								continue;
+
+					}
+
+					objList->addElement(bo->impptr());
+
 				}
 
-				return ar;
+				return objList;
 			}
 			else
 				return new BError( "array.reject(membername, membervalue) requires a parameter." );

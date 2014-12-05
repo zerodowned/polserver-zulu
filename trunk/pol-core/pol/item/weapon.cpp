@@ -300,6 +300,7 @@ void unload_intrinsic_weapons()
 UWeapon* create_intrinsic_weapon_from_npctemplate( ConfigElem& elem, const Package* pkg )
 {
 	string tmp;
+
 	if (elem.remove_prop( "AttackSpeed", &tmp ))
 	{
 		// Construct a WeaponTemplate for this NPC template.
@@ -324,6 +325,7 @@ UWeapon* create_intrinsic_weapon_from_npctemplate( ConfigElem& elem, const Packa
 		wpnelem.add_prop("MissSound", elem.remove_string("AttackMissSound", "0").c_str());
 		wpnelem.add_prop("Anim", elem.remove_string("AttackAnimation", "0").c_str());
 		wpnelem.add_prop("MaxHp", "1");
+
 		if ( elem.remove_prop("AttackHitScript", &tmp) )   
 			wpnelem.add_prop("HitScript", tmp.c_str());
 		if ( elem.remove_prop("AttackMinRange", &tmp) )	
