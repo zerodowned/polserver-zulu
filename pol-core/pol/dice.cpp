@@ -24,14 +24,31 @@ Dice::Dice() :
 {
 }
 
+	/*
 unsigned short Dice::roll() const
 {
     int total = 0;
+	
     for( unsigned i = 0; i < die_count; i++ )
     {
         // random_int returns 0 to n-1
         total += random_int( die_type ) + 1;
     }
+    total += plus_damage;
+    
+    if (total < 0)
+        return 0;
+    else
+		return static_cast<unsigned short>(total);
+}
+*/
+
+unsigned short Dice::roll() const
+{
+    int total = random_int_range(die_count, (die_count * die_type)+1);
+
+	//cout << "dice_type: " <<die_type << ", die_count: " << die_count << "\n";
+
     total += plus_damage;
     
     if (total < 0)
