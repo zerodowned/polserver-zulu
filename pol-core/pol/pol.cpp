@@ -582,7 +582,7 @@ void handle_resync_request( Client* client, PKTBI_22_SYNC* msg )
 {
 	send_goxyz( client, client->chr );
 
-	client->send_pause(); //dave removed force=true 5/10/3, let uoclient.cfg option determine xflow packets (else this hangs 4.0.0e clients)
+	client->send_pause(); // dave removed force=true 5/10/3, let uoclient.cfg option determine xflow packets (else this hangs 4.0.0e clients)
 
 	ForEachMobileInVisualRange( client->chr, send_client_char_data, client );
 
@@ -665,7 +665,7 @@ bool process_data( Client *client )
 			// anti flood prevention (method 1) - voicer
 			if(client->acct == NULL) // undefined message for unknown account is treated as flood
             {
-				printf("Packet flood detected for account unknown, IP: %s",client->ipaddrAsString().c_str());
+				printf("Packet flood detected for account unknown, IP: %s\n",client->ipaddrAsString().c_str());
                 client->forceDisconnect(); // disconnects and do not add any data to the core buffer
                 return false;
             }
@@ -676,6 +676,7 @@ bool process_data( Client *client )
 			printf( "Unexpected message type %2.02x, %d bytes (IP:%s, Account:%s)\n", 
 				(unsigned char) msgtype, client->bytes_received,
 				client->ipaddrAsString().c_str(), (client->acct != NULL)? client->acct->name():"None" );
+
 			
 			// anti flood prevention (method 2) - voicer
 			if(client->acct)
@@ -688,6 +689,13 @@ bool process_data( Client *client )
 				return false;
 			}
 					
+			if(client->bytes_received > 1000) {
+				printf( "Huge unknown message received, type %2.02x, %d bytes (IP:%s, Account:%s); disconnecting\n", 
+					(unsigned char) msgtype, client->bytes_received,
+					client->ipaddrAsString().c_str(), (client->acct != NULL)? client->acct->name():"None" );
+
+				client->forceDisconnect();
+			}
 			// end of anti flood prevention
 			
 			if (logfile)
