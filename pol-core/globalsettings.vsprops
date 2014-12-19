@@ -6,7 +6,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="..\..\lib\boost_1_51_0"
+		AdditionalIncludeDirectories="..\..\lib\boost_1_57_0"
 		PreprocessorDefinitions="WIN32;INC_PASSERT;HAVE_MYSQL;TIXML_USE_STL"
 	/>
 </VisualStudioPropertySheet>
