@@ -79,7 +79,9 @@ void send_action_to_inrange( const Character* obj, UACTION action,
 		
         if (action < ACTION_RIDINGHORSE1 || action > ACTION_RIDINGHORSE7)
         {
+			//cout << "xlate procs old action " << action;
             UACTION new_action = mount_action_xlate[ action ];
+			//cout << ", new action " << new_action << "\n";
 			
 			switch ( obj->graphic ) {
 				case UOBJ_HUMAN_FEMALE:
@@ -114,8 +116,15 @@ void send_action_to_inrange( const Character* obj, UACTION action,
 					if (new_action == 0) {
 						return;
 					}
+
+					//cout << "Anim " << action;
 					action = new_action;
+					//cout << " was xlated to " << action << "\n";
 					break;
+
+				//default:
+				//	break;
+					//cout << "Skipped xlated because graphic " << obj->graphic << " is not human.\n";
 			}
         }
     }

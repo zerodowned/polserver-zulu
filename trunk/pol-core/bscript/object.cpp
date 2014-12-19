@@ -943,26 +943,14 @@ BObjectImp* ObjArray::call_method_id( const int id, Executor& ex, bool forcebuil
 		break;
 
 	case MTH_APPLY: // reserved for apply
-		if (name_arr.empty())
-		{
-			if (ex.numParams() == 1)
-			{			
-				const String* func_name;
+		if (name_arr.empty()) {
 
-				if(ex.getStringParam(0, func_name)==false) {
-					return new BError( "Invalid parameter type" );
-				}
-				std::string func_name_s = func_name->getStringRep();
-				for(int n; n < ex.availmodules.size(); n++ ) {
-					//ExecutorModule* module = ex.availmodules[n];
-					//module->execFunc(
-					//if(module->functionIndex( func_name_s.c_str() )!=0 ) {
-					//	std::cout << "found functioname " << func_name_s << " in module " <<module->moduleName();
-					//}
-
-				}
-			} else {
-				return new BError( "array.apply(funcname) requires a parameter." );
+			if (ex.numParams() > 0) {
+			
+				return NULL;
+			}
+			else {
+				return new BError( "array.apply(methodname, [param]) requires a parameter." );
 			}
 		}
 		break;
@@ -1147,59 +1135,49 @@ BObjectImp* ObjArray::call_method_id( const int id, Executor& ex, bool forcebuil
 				return new BError( "array.reject(membername, membervalue) requires a parameter." );
 		}
 		break;
+
 	case MTH_REJECT_IP:
-		if (name_arr.empty()) {			
-		if (ex.numParams() > 0)
-			{
-				String* member_name_imp = NULL;
 
-				BObjectImp* parmImp0 = ex.getParamImp(0);
+		if (name_arr.empty()) {
 
-				if(parmImp0->isa(BObjectImp::OTString))
-				{					
-					member_name_imp = static_cast<String*>(parmImp0);
-				} else {
+			if (ex.numParams() > 0) {
+
+				const String* param0_membername;								
+
+				if((param0_membername = ex.getStringParam( 0 ))==false) {
 					return new BError( "Invalid parameter type" );
-				}	
+				}				
 
-				BObjectImp* param1 = NULL;								
+				BObject* param1;
 
 				if( ex.numParams() > 1 )
-					param1 = ex.getParamImp( 1 );
+					param1 = ex.getParamObj( 1 );
+				else
+					param1 = NULL;
 
-				string member_name = member_name_imp->getStringRep();
-				
-				BObjectRef member_obj_ref, obj_ref;
-				
+				const std::string member_name = param0_membername->getStringRep();
+
 				Cont new_ref;
 
-				//omp_set_num_threads(7);
+				BOOST_FOREACH(BObjectRef &bo_ref, ref_arr) {
 
-				int i, nCount = ref_arr.size();
+					if(!bo_ref->isa(BObjectType::OTUninit) && !bo_ref->isa(BObjectType::OTError)) {
 
-				#pragma omp parallel for private(member_obj_ref, i, obj_ref) shared(param1, new_ref, nCount) schedule(static)
-				for (i = 0; i < nCount; i++)
-				{
-					obj_ref = ref_arr[i];
+						BObjectRef bo_member = bo_ref->impptr()->get_member(member_name.c_str());						
 
-					#pragma omp critical
-					member_obj_ref = obj_ref->impptr()->get_member(member_name.c_str());
-
-					if (!member_obj_ref->isa(OTUninit) && !member_obj_ref->isa(OTError)) {
-						if (!param1) {
-							if (member_obj_ref->isTrue()) {
+						if(param1==NULL) {
+							if (bo_member->isTrue())
 								continue;
-							}
-						}
-						else if (param1->isEqual(member_obj_ref->impref()))  {
-							continue;
-						}
-					}
 
-					#pragma omp critical
-					new_ref.push_back(obj_ref);
+						} else {
+							if(bo_member->impptr()->isEqual( param1->impref() ))
+								continue;
+						}
+					}					
+
+					new_ref.push_back(bo_ref);
 				}
-			
+
 				ref_arr.swap( new_ref );
 
 				return NULL;
@@ -1208,6 +1186,8 @@ BObjectImp* ObjArray::call_method_id( const int id, Executor& ex, bool forcebuil
 				return new BError( "array.reject_ip(membername, [membervalue]) requires a parameter." );
 			}
 		}
+		break;
+
 	case MTH_COLLECT:
 		if (name_arr.empty())
 		{
