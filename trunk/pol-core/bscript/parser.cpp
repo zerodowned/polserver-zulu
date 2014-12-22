@@ -652,6 +652,7 @@ ObjMethod object_methods[] = {
 	{ MTH_LENGTH, "length" },
 	{ MTH_CAPITALIZE, "capitalize" },
 	{ MTH_PROCESS_GENDER_TAGS, "process_gender_tags" },
+	{ MTH_COLLECT_IP, "collect_ip" },
 };
 
 int n_objmethods = sizeof object_methods / sizeof object_methods[0];
