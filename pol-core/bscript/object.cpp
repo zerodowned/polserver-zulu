@@ -1132,7 +1132,7 @@ BObjectImp* ObjArray::call_method_id( const int id, Executor& ex, bool forcebuil
 				return objList;
 			}
 			else
-				return new BError( "array.reject(membername, membervalue) requires a parameter." );
+				return new BError( "array.reject(membername, [membervalue]) requires a parameter." );
 		}
 		break;
 
@@ -1184,6 +1184,59 @@ BObjectImp* ObjArray::call_method_id( const int id, Executor& ex, bool forcebuil
 			}
 			else {
 				return new BError( "array.reject_ip(membername, [membervalue]) requires a parameter." );
+			}
+		}
+		break;
+
+	case MTH_COLLECT_IP:
+
+		if (name_arr.empty()) {
+
+			if (ex.numParams() > 0) {
+
+				const String* param0_membername;								
+
+				if((param0_membername = ex.getStringParam( 0 ))==false) {
+					return new BError( "Invalid parameter type" );
+				}				
+
+				BObject* param1;
+
+				if( ex.numParams() > 1 )
+					param1 = ex.getParamObj( 1 );
+				else
+					param1 = NULL;
+
+				const std::string member_name = param0_membername->getStringRep();
+
+				Cont new_ref;
+
+				BOOST_FOREACH(BObjectRef &bo_ref, ref_arr) {
+
+					if(bo_ref->isa(BObjectType::OTUninit) && !bo_ref->isa(BObjectType::OTError))
+						continue;
+
+					BObjectRef bo_member = bo_ref->impptr()->get_member(member_name.c_str());						
+
+					if(param1==NULL) {
+
+						if (bo_member->isTrue())
+							new_ref.push_back(bo_ref);
+
+					} else {
+
+						if(bo_member->impptr()->isEqual( param1->impref() ))
+							new_ref.push_back(bo_ref);
+
+					}
+				}
+
+				ref_arr.swap( new_ref );
+
+				return NULL;
+			}
+			else {
+				return new BError( "array.collect_ip(membername, [membervalue]) requires a parameter." );
 			}
 		}
 		break;
@@ -1241,9 +1294,10 @@ BObjectImp* ObjArray::call_method_id( const int id, Executor& ex, bool forcebuil
 				return ar;
 			}
 			else
-				return new BError( "array.collect(membername, membervalue) requires a parameter." );
+				return new BError( "array.collect(membername, [membervalue]) requires a parameter." );
 		}
 		break;
+
 	case MTH_JOIN:
 		if (name_arr.empty()) 
 		{

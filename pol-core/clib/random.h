@@ -42,14 +42,14 @@ let us know!  (gpc@ipld01.hac.com)
 #define _RANDOM_H_
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 #include "rawtypes.h"
 	
-extern int 	gaussian_noise_toggle;
-extern float 	gaussian_noise_uniform1, gaussian_noise_uniform2;
-extern float	gaussian_noise_temp;
+//extern int 	gaussian_noise_toggle;
+//extern float 	gaussian_noise_uniform1, gaussian_noise_uniform2;
+//extern float	gaussian_noise_temp;
 
 /* random.c */
 
@@ -59,15 +59,15 @@ int random_int ( int i );
 
 int random_int_range (int minI,int maxI);
 
-void set_seed ( unsigned long s );
+//void set_seed ( unsigned long s );
 
-unsigned long get_seed (void);
+//unsigned long get_seed (void);
 
-float park_miller_randomizer (void);
+//float park_miller_randomizer (void);
 
-long PMrand ( long *s );
+//long PMrand ( long *s );
 
-float gaussian_noise (   float mean,    float sigma );
+//float gaussian_noise (   float mean,    float sigma );
 
 
 // Random Number Generator
@@ -75,6 +75,7 @@ float gaussian_noise (   float mean,    float sigma );
 // Ranq1 generates a 64-bit random
 // period of 1.8+10^19
 // only used for initialize Ranfib's table of 55 random values.
+/*
 struct Ranq1
 {
 	u64 v;
@@ -92,6 +93,7 @@ struct Ranq1
 	}
 	inline double doub() { return 5.42101086242752217E-20 * int64(); }
 };
+*/
 
 
 // The 'real' random number Generator
@@ -99,6 +101,7 @@ struct Ranq1
 // "lagged Fibonacci generator"
 // generates new values directly als floating point, 
 // by the floating-point subtraction of two previos values.
+/*
 struct Ranfib
 {
 	double dtab[55],dd;
@@ -116,11 +119,12 @@ struct Ranfib
 		return (dtab[inext] =dd);
 	}
 };
+*/
 
 
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 #endif

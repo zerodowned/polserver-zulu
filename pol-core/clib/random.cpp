@@ -71,8 +71,9 @@ let us know!  (gpc@ipld01.hac.com)
  * Revision 2.8  1993/04/14  04:53:06  gpc-avc
  * Finished modes for checkpoining
  *
- *
+ * Changed to mersenne_twister by AnDenix somday of December of 2014
  */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <float.h>
@@ -89,21 +90,22 @@ static boost::random::mt19937 gen(std::time(0));
 
 //gen.seed(static_cast<unsigned int>(std::time(0)));
 
-int 	gaussian_noise_toggle;
-float 	gaussian_noise_uniform1, gaussian_noise_uniform2;
-float	gaussian_noise_temp;
+//int 	gaussian_noise_toggle;
+//float 	gaussian_noise_uniform1, gaussian_noise_uniform2;
+//float	gaussian_noise_temp;
 
 
 #define M_PI 3.14159265358979323846 
 
 /* definitions for the random number generator (seed * GEN % MOD) */
-#define GEN 16807
-#define MOD 2147483647
-#define QUO 127773
-#define RES 2836
+//#define GEN 16807
+//#define MOD 2147483647
+//#define QUO 127773
+//#define RES 2836
 
-static long	seed;
+//static long	seed;
 
+/*
 void set_seed(
   unsigned long s
   )
@@ -124,9 +126,12 @@ float park_miller_randomizer(void)
   return retval;
 }
 
+*/
+
 /* Park-Miller "minimal standard" pseudo random number generator */
 /* Implementation by Jan Jannink (c) 1992 */
 
+/*
 long PMrand(
 	long *s
 	)
@@ -160,7 +165,7 @@ float gaussian_noise(
   return mean + (sigma * gauss);
 }
 
-
+*/
   // static instance of the Random Number Generator
   // start seed time
   //static Ranfib ranGen((u64) time(NULL));
