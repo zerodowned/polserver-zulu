@@ -32,6 +32,8 @@ Notes
 #include "../pol/uoexhelp.h"
 #include "../clib/random.h"
 #include "../pol/polcfg.h";
+
+#include <boost/foreach.hpp>
 //--
 
 //class UObject;
@@ -257,10 +259,11 @@ void s_trim(string &s)
 }
 
 
+// convert int value to a binary representation
 void int_to_binstr(int& value, std::stringstream &s)
-{
-	int i;
-	for(i = 31; i > 0; i--) {
+{	
+	int i = (sizeof(int) * 8) - 1;
+	for(; i > 0; i--) {
 		if(value & (1 << i))
 			break;
 	}
@@ -272,7 +275,8 @@ void int_to_binstr(int& value, std::stringstream &s)
 	}
 }
 
-bool try_to_format( std::stringstream &to_stream, BObjectImp *what, string& frmt )
+// suplementory function to format
+inline bool try_to_format( std::stringstream &to_stream, BObjectImp *what, string& frmt )
 {
 	if(frmt.empty()) {
 		to_stream << what->getStringRep();
@@ -281,7 +285,7 @@ bool try_to_format( std::stringstream &to_stream, BObjectImp *what, string& frmt
 
 	if(frmt.find('b')!=string::npos) {
 		if(!what->isa( BObjectImp::OTLong )) {
-			to_stream << "<int required>";
+			to_stream << "<needs Int>";
 			return false;
 		}
 		BLong* plong = static_cast<BLong*>(what);
@@ -291,7 +295,7 @@ bool try_to_format( std::stringstream &to_stream, BObjectImp *what, string& frmt
 		int_to_binstr(n, to_stream);
 	} else if(frmt.find('x')!=string::npos) {
 		if(!what->isa( BObjectImp::OTLong )) {
-			to_stream << "<int required>";
+			to_stream << "<needs Int>";
 			return false;
 		}
 		BLong* plong = static_cast<BLong*>(what);
@@ -301,7 +305,7 @@ bool try_to_format( std::stringstream &to_stream, BObjectImp *what, string& frmt
 		to_stream << std::hex << n;
 	} else if(frmt.find('o')!=string::npos) {
 		if(!what->isa( BObjectImp::OTLong )) {
-			to_stream << "<int required>";
+			to_stream << "<needs Int>";
 			return false;
 		}
 		BLong* plong = static_cast<BLong*>(what);
@@ -313,17 +317,17 @@ bool try_to_format( std::stringstream &to_stream, BObjectImp *what, string& frmt
 		int n;
 		if(what->isa( BObjectImp::OTLong )) {
 			BLong* plong = static_cast<BLong*>(what);
-			int n = plong->value();
+			n = plong->value();
 		} else if(what->isa( BObjectImp::OTDouble )) {
 			Double* pdbl = static_cast<Double*>(what);
 			n = (int) pdbl->value();
 		} else {
-			to_stream << "<int or double required>";
+			to_stream << "<needs Int, Double>";
 			return false;
 		}		
 		to_stream << std::dec << n;
 	} else {
-		to_stream << "<unknown format: " << frmt << ">";
+		to_stream << "<bad format: " << frmt << ">";
 		return false;
 	}		
 	return true;
@@ -544,11 +548,13 @@ BObjectImp* String::call_method_id( const int id, Executor& ex, bool forcebuilti
 		{
 			if (! (cont->isa( OTArray )))
 				return new BError( "string.join expects an array" );
+
 			ObjArray* container = static_cast<ObjArray*>(cont->impptr());
 
 			// no empty check here on purpose
 			std::ostringstream joined;
-			bool first=true;
+			bool first = true;
+
 
 			for( ObjArray::const_iterator itr = container->ref_arr.begin(), itrend = container->ref_arr.end(); itr != itrend; ++itr ) {
 				BObject *bo = itr->get();
@@ -563,7 +569,9 @@ BObjectImp* String::call_method_id( const int id, Executor& ex, bool forcebuilti
 
 				joined << bo->impptr()->getStringRep();
 			}
+
 			return new String(joined.str());
+
 		} else
 			return new BError( "string.join(array) requires a parameter." );
 		}
@@ -759,16 +767,40 @@ BObjectImp* String::call_method_id( const int id, Executor& ex, bool forcebuilti
 						//cout << "prop_name: '" << prop_name << "' tag_body: '" << tag_body << "'";
 
 						if( ex.numParams() <= tag_param_idx ) {						
-							result << "<tag out of range: #" << (tag_param_idx + 1) << ">";						
+							result << "<invalid index: #" << (tag_param_idx + 1) << ">";						
 							continue;
 						}					
 
 						BObjectImp *imp = ex.getParamImp(tag_param_idx);
 						
-						if(prop_name.empty()==false) { // accesing object member
-							BObjectRef obj_member = imp->get_member(prop_name.c_str());
-							BObjectImp *member_imp = obj_member->impptr();							
-							try_to_format(result, member_imp, frmt);											
+						if(prop_name.empty()==false) { // accesing object 
+						/*	if(prop_name[0]=='@') {
+
+								prop_name = prop_name.substr(1, string::npos);								
+								UObject* uobj;
+								BObjectImp* call_res;
+								getUObjectParam(ex, tag_param_idx, uobj);
+
+								std::string val;
+								if (uobj->getprop( prop_name, val ))
+								{
+									call_res = BObjectImp::unpack( val.c_str() );
+								}
+								else
+								{
+									result << "<Property not found>";
+									continue;
+								}
+
+								try_to_format(result, call_res, frmt);
+
+							} else {
+							*/
+								BObjectRef obj_member = imp->get_member(prop_name.c_str());
+								BObjectImp *member_imp = obj_member->impptr();							
+								try_to_format(result, member_imp, frmt);	
+							//}
+																	
 						} else {										
 							try_to_format(result, imp, frmt);							
 						}
