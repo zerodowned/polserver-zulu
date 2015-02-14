@@ -71,7 +71,7 @@ let us know!  (gpc@ipld01.hac.com)
  * Revision 2.8  1993/04/14  04:53:06  gpc-avc
  * Finished modes for checkpoining
  *
- * Changed to mersenne_twister by AnDenix somday of December of 2014
+ * Changed to mersenne_twister by AnDenix someday of December of 2014
  */
 
 #include <stdlib.h>

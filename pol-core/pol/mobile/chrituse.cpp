@@ -82,6 +82,7 @@ bool Character::start_itemuse_script( EScriptProgram* prog, Item* item, bool sta
 #include "../scrstore.h"
 void Item::walk_on( Character* chr )
 {
+	//andenix check how to run it
     const ItemDesc& itemdesc = find_itemdesc( objtype_ );
     if (!itemdesc.walk_on_script.empty())
     {

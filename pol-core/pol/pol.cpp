@@ -685,6 +685,8 @@ bool process_data( Client *client )
 			} else
 			{
 				Log2("Account unknown sent non-allowed message. Forcing Disconnect.");
+				printf("Account unknown sent non-allowed message. Forcing Disconnect.");
+
 				client->forceDisconnect();
 				return false;
 			}
